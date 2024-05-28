@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    // Editor
+    "aaron-bond.better-comments",
+    "editorconfig.editorconfig",
+
+    // Rust
+    "serayuzgur.crates",
+    "tamasfe.even-better-toml",
+    "1yib.rust-bundle",
+    "dustypomerleau.rust-syntax",
+    "rust-lang.rust-analyzer"
+  ]
+}

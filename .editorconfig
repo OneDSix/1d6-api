@@ -1,0 +1,27 @@
+root = true
+
+[*]
+indent_style = tab
+indent_size = tab
+tab_width = 4
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+charset = utf-8
+
+# Text editors might turn leading spaces into tabs,
+# e.g. in multi-line bullet list items
+[*.md]
+indent_style = space
+indent_size = 2
+
+# Tabs may not be valid YAML/YML
+# @see https://yaml.org/spec/1.2/spec.html#id2777534
+# Slightly easier to read JSONs
+[**.{json,yml,yaml,toml}]
+indent_style = space
+indent_size = 2
+
+# Windows
+[**.bat]
+end_of_line = crlf

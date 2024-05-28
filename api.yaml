@@ -1,0 +1,77 @@
+openapi: 3.0.0
+
+info:
+  title: 1D6 API
+  description: The public REST API for 1D6. Found here is Accounts, Mods, Servers, etc.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8000
+    description: The location the development server is hosted at, assuming you ran `cargo shuttle run`.
+
+paths:
+  /:
+    get:
+      summary: Returns a basic "Welcome traveler!" message, along with a link to the docs.
+      responses:
+        "200":
+          description: the request was a success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  about:
+                    type: string
+                  docs:
+                    type: string
+                  version:
+                    type: string
+
+  /test/{id}:
+    description: A testing endpoint only enabled in development environments
+    get:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the todo to return.
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        "200":
+          description: Returns a todo message in JSON format.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                    example: 1
+                  note:
+                    type: string
+                    example: "My Todo"
+        "400":
+          description: Something happened that caused the server to send an error.
+
+  /test:
+    description: A testing endpoint only enabled in development environments
+    post:
+      summary: Adds a todo to the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+              format: utf-8
+              example: "My Second Todo"
+      responses:
+        "200":
+          description: Created
+        "201":
+          description: Created
