@@ -1,3 +1,4 @@
+#![allow(dead_code, unused_variables)]
 
 lazy_static::lazy_static! {
 	static ref ALLOWED_CDNS: Vec<String> = vec![
