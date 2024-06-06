@@ -1,0 +1,62 @@
+openapi: 3.0.2
+
+info:
+  title: 1D6 API
+  description: The public REST API for 1D6. Found here is Accounts, Mods, Servers, etc.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8000
+    description: The location the development server is hosted at, assuming you ran `cargo shuttle run`.
+  - url: https://onedsix-api.shuttleapp.rs/
+    description: Production environment, everyone has access to this.
+
+tags:
+  - name: user
+    description: Endpoints focused around users
+  - name: mods
+    description: Endpoints focused around mods and addons
+
+paths:
+  /:
+    get:
+      summary: Returns a basic "Welcome traveler!" message, along with a link to the docs. The message string may change depending on the date.
+      responses:
+        "200":
+          description: the request was a success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  api_version:
+                    type: string
+                    description: The preferred version of the api, say "/v1/data" or "/v3/similar_date"
+                  documentation:
+                    type: string
+                    description: A link to the documentation
+                  message:
+                    type: string
+                    description: A basic "Welcome traveler!" message, that gets replaced on certain holidays.
+                additionalProperties: false
+                required:
+                  - api_version
+                  - documentation
+                  - message
+
+
+
+components:
+  schemas:
+    BaseError:
+      description: All errors coming from the API will be formatted like this.
+      type: object
+      properties:
+        error:
+          type: string
+        description:
+          type: string
+      additionalProperties: false
+      required:
+        - error
+        - description

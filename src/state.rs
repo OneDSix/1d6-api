@@ -1,5 +1,3 @@
-#![allow(non_snake_case, unused_imports)]
-
 use shuttle_runtime::SecretStore;
 use sqlx::PgPool;
 
@@ -7,5 +5,5 @@ use sqlx::PgPool;
 #[derive(Clone)]
 pub struct AppState {
     pub pool: PgPool,
-	//pub secrets: SecretStore,
+	pub secrets: SecretStore,
 }

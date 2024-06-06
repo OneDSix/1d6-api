@@ -4,15 +4,17 @@ use crate::utils::cors::default_cors;
 
 use super::responses::index_get;
 
+pub mod user;
 pub mod mods;
-pub mod users;
+pub mod statistics;
 
 pub fn config(cfg: &mut ServiceConfig) {
     cfg.service(
-		scope("/v1")
+		scope("v1")
 			.wrap(default_cors())
 			.service(index_get)
-			.configure(users::config)
+			.configure(user::config)
 			.configure(mods::config)
+			.configure(statistics::config)
 	);
 }

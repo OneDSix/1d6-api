@@ -39,6 +39,8 @@ urlencoding = "2.1.2"
 futures = "0.3.30"
 thiserror = "1.0.61"
 lazy_static = "1.4.0"
+bcrypt = "0.15.1"
+jsonwebtoken = "9.3.0"
 
 [profile.dev]
 opt-level = 0                # Minimal optimization, speeds up compilation
