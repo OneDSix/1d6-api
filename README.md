@@ -16,5 +16,4 @@ I'll leave the job of making API wrappers, Discord bots, etc. to you.
 
 ## For Contributors
 
-If adding another migration, make sure the file name is `YYYY_MM_DD_Description.sql`, as that makes it a little more organized.\
-If you end up adding new endpoints, add support for them in the [`./tools/requester.py`](/tools/requester.py) file as well.
+If adding another migration, make sure the file name is `YYYY_MM_DD_Description.sql`, as that makes it a little more organized.
