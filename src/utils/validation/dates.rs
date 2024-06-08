@@ -1,16 +1,16 @@
-pub mod special_days {
-    use chrono::{Datelike, Local};
+use chrono::{Datelike, Local};
 
-	#[derive(PartialEq, Debug)]
-	pub enum SpecialDates {
-		OneDSixBirthday,
-		AprilFools,
-		Halloween,
-		Christmas,
-		NewYears,
-		NotSpecial
-	}
+#[derive(PartialEq, Debug)]
+pub enum SpecialDates {
+	OneDSixBirthday,
+	AprilFools,
+	Halloween,
+	Christmas,
+	NewYears,
+	NotSpecial
+}
 
+impl SpecialDates {
 	pub fn is_special() -> SpecialDates {
 		let now = Local::now();
 		match (now.month(), now.day()) {

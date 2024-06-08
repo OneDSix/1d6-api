@@ -1,0 +1,14 @@
+use actix_web::web::{get, scope, ServiceConfig};
+
+use crate::{routes::responses::index_get, utils::cors::default_cors};
+
+pub fn root_config(cfg: &mut ServiceConfig) {
+	cfg.service(
+		scope("gs")
+            .wrap(default_cors())
+
+			// Handle both "/v1" and "/v1/" as they can be easily mixed up
+			.route("", get().to(index_get))
+			.route("/", get().to(index_get))
+	);
+}

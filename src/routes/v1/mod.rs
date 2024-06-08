@@ -1,20 +1,48 @@
-use actix_web::web::{scope, ServiceConfig};
-
-use crate::utils::cors::default_cors;
-
 use super::responses::index_get;
 
-pub mod user;
+use crate::utils::{
+    cors::default_cors,
+    ratelimit::default_ratelimit,
+};
+
+use actix_identity::IdentityMiddleware;
+use actix_session::{config::PersistentSession, storage::CookieSessionStore, SessionMiddleware};
+use actix_web::{
+    cookie::{time::Duration, Key},
+    web::{get, scope, ServiceConfig},
+};
+
+pub mod game_services;
 pub mod mods;
 pub mod statistics;
+pub mod user;
 
 pub fn config(cfg: &mut ServiceConfig) {
+
     cfg.service(
-		scope("v1")
-			.wrap(default_cors())
-			.service(index_get)
-			.configure(user::config)
-			.configure(mods::config)
-			.configure(statistics::config)
-	);
+        scope("v1")
+            // Base Middlewares
+            .wrap(default_cors())
+            .wrap(default_ratelimit())
+
+            // Auth
+            .wrap(IdentityMiddleware::default())
+            .wrap(
+                SessionMiddleware::builder(CookieSessionStore::default(), Key::generate())
+                    .cookie_name("auth-token".to_owned())
+                    .cookie_secure(false)
+                    .session_lifecycle(PersistentSession::default().session_ttl(Duration::hours(2)))
+                    .build(),
+            )
+
+            // Handle both "/v1" and "/v1/" as they can be easily mixed up
+            .route("", get().to(index_get))
+            .route("/", get().to(index_get))
+
+            // Add the rest of the endpoints
+            .configure(user::config)
+            .configure(mods::config)
+            .configure(statistics::config)
+            .configure(game_services::root_config),
+    );
 }

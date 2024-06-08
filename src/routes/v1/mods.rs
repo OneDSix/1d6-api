@@ -1,5 +1,5 @@
 use crate::{
-	routes::responses::ApiErrors,
+	routes::errors::ApiErrors,
 	state,
 };
 

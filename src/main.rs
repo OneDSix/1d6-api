@@ -1,10 +1,9 @@
 mod routes;
-mod utils;
 mod state;
-mod validate;
+mod utils;
 
 use actix_web::web::{get, Data, FormConfig, JsonConfig, PathConfig, QueryConfig, ServiceConfig};
-use routes::responses::{ApiErrors, not_found};
+use routes::{errors::ApiErrors, responses::not_found};
 use shuttle_actix_web::ShuttleActixWeb;
 use shuttle_runtime::SecretStore;
 use sqlx::PgPool;
