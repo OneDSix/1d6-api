@@ -5,13 +5,13 @@ use actix_web::{
 	HttpMessage, HttpRequest, HttpResponse, Responder
 };
 use serde::{Deserialize, Serialize};
-use serde_json::json;
+use serde_json::{json, Value};
 use sqlx::FromRow;
 
 use crate::{
 	routes::{errors::ApiErrors, responses::IMPOSSIBLE_CONDITION},
-	state::AppState,
-	utils::validation::user::{PasswordResult, UsernameResult}
+	AppState,
+	utils::validation::username::{PasswordResult, UsernameResult}
 };
 
 #[derive(FromRow)]
@@ -21,6 +21,12 @@ struct Password(String);
 struct Credentials {
     pub username: String,
     pub password: String,
+}
+
+pub fn login_json(name: String) -> Value {
+	json!({
+		"logged_in_as": name
+    })
 }
 
 pub fn config(cfg: &mut ServiceConfig) {
@@ -41,11 +47,7 @@ async fn get_root(identity: Option<Identity>) -> Result<HttpResponse, ApiErrors>
         Some(Err(e)) => return Err(ApiErrors::AuthenticationCookieError(e.to_string()).into()),
     };
 
-	let index_data = json!({
-        "logged_in_as": id
-    });
-
-    Ok(HttpResponse::Ok().json(index_data))
+    Ok(HttpResponse::Ok().json(login_json(id)))
 }
 
 #[post("/signup")]
@@ -75,7 +77,7 @@ async fn post_signup(req: HttpRequest, json: Json<Credentials>, state: Data<AppS
 					.map_err(|e| ApiErrors::DatabaseError(e.to_string()).into())?;
 
 					Identity::login(&req.extensions(), json.username.to_string()).unwrap();
-					returns = Ok(HttpResponse::Ok().json(json!({"logged_in_as": &json.username})))
+					returns = Ok(HttpResponse::Ok().json(login_json(json.username.clone())))
 				}
 				Ok(_) | Err(_) => { returns = Err(ApiErrors::UnknownError(IMPOSSIBLE_CONDITION.to_string()).into()) }
 			}
@@ -116,7 +118,7 @@ async fn post_login(ident: Option<Identity>, req: HttpRequest, json: Json<Creden
 		}
 
 		Identity::login(&req.extensions(), json.username.to_string()).unwrap();
-		returns = Ok(HttpResponse::Ok().json(json!({"logged_in_as": &json.username})));
+		returns = Ok(HttpResponse::Ok().json(login_json(json.username.clone())));
 	} else {
 		returns = Err(ApiErrors::InvalidCredentials("Invalid Username/Password Combo".to_string()).into());
 	}

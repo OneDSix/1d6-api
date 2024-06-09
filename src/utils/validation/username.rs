@@ -1,7 +1,7 @@
 use actix_web::web::Data;
 use censor::Censor;
 
-use crate::{routes::errors::ApiErrors, state::AppState};
+use crate::{routes::errors::ApiErrors, AppState};
 
 const SQL_INJECTION: [&'static str; 28] = [
 	"SELECT", "INSERT", "UPDATE", "DELETE",

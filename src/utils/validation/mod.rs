@@ -1,2 +1,3 @@
 pub mod dates;
-pub mod user;
+pub mod username;
+pub mod auth;

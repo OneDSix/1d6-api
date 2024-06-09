@@ -16,6 +16,7 @@ pub mod game_services;
 pub mod mods;
 pub mod statistics;
 pub mod user;
+pub mod telemetry;
 
 pub fn config(cfg: &mut ServiceConfig) {
 
@@ -32,7 +33,7 @@ pub fn config(cfg: &mut ServiceConfig) {
                     .cookie_name("auth-token".to_owned())
                     .cookie_secure(false)
                     .session_lifecycle(PersistentSession::default().session_ttl(Duration::hours(2)))
-                    .build(),
+                    .build()
             )
 
             // Handle both "/v1" and "/v1/" as they can be easily mixed up
@@ -43,6 +44,7 @@ pub fn config(cfg: &mut ServiceConfig) {
             .configure(user::config)
             .configure(mods::config)
             .configure(statistics::config)
-            .configure(game_services::root_config),
+            .configure(game_services::config)
+			.configure(telemetry::config)
     );
 }

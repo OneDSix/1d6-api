@@ -1,6 +1,7 @@
 use crate::{
 	routes::errors::ApiErrors,
-	state,
+	utils::{cors::default_cors, ratelimit::default_ratelimit},
+	AppState
 };
 
 use actix_web::{
@@ -8,7 +9,6 @@ use actix_web::{
 };
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
-use state::AppState;
 
 #[derive(Serialize, Deserialize)]
 struct NewMod {
@@ -36,6 +36,9 @@ pub struct Mod {
 pub  fn config(cfg: &mut ServiceConfig) {
 	cfg.service(
 		scope("mods")
+		.wrap(default_cors())
+		.wrap(default_ratelimit())
+
 		.service(post_mod)
 		.service(get_mod)
 	);

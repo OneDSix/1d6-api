@@ -1,29 +1,29 @@
 //! Based off https://github.com/modrinth/labrinth/blob/master/src/util/ratelimit.rs
 
-use actix_web::ResponseError;
-use governor::clock::{Clock, DefaultClock};
-use governor::middleware::StateInformationMiddleware;
-use governor::{middleware, state, Quota, RateLimiter};
-use lazy_static::lazy_static;
-use std::num::NonZeroU32;
-use std::str::FromStr;
-use std::sync::Arc;
+use std::{num::NonZeroU32, str::FromStr, sync::Arc};
 
 use actix_web::{
+	ResponseError,
     body::EitherBody,
     dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform},
     Error,
 };
+use governor::{
+	clock::{Clock, DefaultClock},
+	middleware::{self, StateInformationMiddleware},
+	state, Quota, RateLimiter
+};
+use lazy_static::lazy_static;
 use futures_util::future::{ready, LocalBoxFuture, Ready};
 
 use crate::routes::errors::ApiErrors;
 
 pub fn default_ratelimit() -> RateLimit {
-	RateLimit(Arc::clone(&LIMITER))
+    RateLimit(Arc::clone(&LIMITER))
 }
 
 lazy_static! {
-	static ref LIMITER: KeyedRateLimiter = Arc::new(
+    static ref LIMITER: KeyedRateLimiter = Arc::new(
         RateLimiter::keyed(Quota::per_second(NonZeroU32::new(5).unwrap()))
             .with_middleware::<StateInformationMiddleware>(),
     );

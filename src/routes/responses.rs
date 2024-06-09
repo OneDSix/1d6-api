@@ -6,7 +6,7 @@ use crate::utils::validation::dates::SpecialDates;
 use super::errors::ApiError;
 
 /// A constant link to the API docs. Added to the end of some requests.
-pub const DOCS_LINK: &str = "https://github.com/OneDSix/1d6-api/wiki";
+pub const DOCS_LINK: &'static str = "https://github.com/OneDSix/1d6-api/wiki";
 
 /// Send this whenever an impossible condition is possible.
 pub const IMPOSSIBLE_CONDITION: &'static str = "An impossible condition has been reached. Please make an issue with whatever you did to cause this on the API's GitHub here: https://github.com/OneDSix/1d6-api";
