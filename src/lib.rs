@@ -3,12 +3,12 @@ use shuttle_actix_web::ShuttleActixWeb;
 use shuttle_runtime::SecretStore;
 use sqlx::PgPool;
 
-use crate::{
-	utils::{cors::default_cors, ratelimit::default_ratelimit},
-	routes::{errors::ApiErrors, responses::not_found}
+use crate::routes::{
+    errors::ApiErrors, defaults::{default_cors, default_ratelimit, not_found}
 };
-pub mod utils;
+
 pub mod routes;
+pub mod utils;
 
 #[rustfmt::skip]
 pub async fn run (
@@ -54,5 +54,5 @@ pub async fn run (
 #[derive(Clone)]
 pub struct AppState {
     pub pool: PgPool,
-	pub secrets: SecretStore,
+    pub secrets: SecretStore,
 }

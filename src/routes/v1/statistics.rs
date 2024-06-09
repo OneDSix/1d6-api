@@ -1,9 +1,7 @@
 use std::sync::Mutex;
 
 use crate::{
-    routes::errors::ApiErrors,
-    utils::{cacher::Cache, cors::default_cors, ratelimit::default_ratelimit},
-	AppState
+    routes::{defaults::{default_cors, default_ratelimit}, errors::ApiErrors}, utils::cacher::Cache, AppState
 };
 
 use lazy_static::lazy_static;
@@ -64,7 +62,7 @@ pub fn config(cfg: &mut ServiceConfig) {
 
 // Based on https://github.com/modrinth/labrinth/blob/master/src/routes/v3/statistics.rs, but with some extra optimizations and more information
 #[get("")]
-async fn get_stats(state: Data<AppState>) -> Result<HttpResponse, ApiErrors> {
+async fn get_stats<'a>(state: Data<AppState>) -> Result<HttpResponse, ApiErrors<'a>> {
     let mut stats = GLOBAL_STAT_CACHE.lock().unwrap();
 
     if let Some(data) = get_cache(stats.stat_cacher.get_expiration(), state)
@@ -77,7 +75,7 @@ async fn get_stats(state: Data<AppState>) -> Result<HttpResponse, ApiErrors> {
     Ok(HttpResponse::Ok().json(stats.stat_cacher.cache_data.clone()))
 }
 
-async fn get_cache(refresh_in: i64, state: Data<AppState>) -> Result<Stats, ApiErrors> {
+async fn get_cache<'a>(refresh_in: i64, state: Data<AppState>) -> Result<Stats, ApiErrors<'a>> {
     let user: QueryData = sqlx::query_as("SELECT COUNT(id) FROM users")
         .fetch_one(&state.pool)
         .await

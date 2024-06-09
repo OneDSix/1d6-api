@@ -22,7 +22,7 @@ pub enum UsernameResult {
 	UnhandledResult
 }
 
-impl From<ApiErrors> for UsernameResult {
+impl From<ApiErrors<'_>> for UsernameResult {
     fn from(error: ApiErrors) -> Self {
         match error {
             ApiErrors::DatabaseError(error_msg) => UsernameResult::DatabaseError(error_msg),

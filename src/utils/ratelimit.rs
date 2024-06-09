@@ -1,33 +1,20 @@
 //! Based off https://github.com/modrinth/labrinth/blob/master/src/util/ratelimit.rs
 
-use std::{num::NonZeroU32, str::FromStr, sync::Arc};
+use std::{str::FromStr, sync::Arc};
 
 use actix_web::{
-	ResponseError,
     body::EitherBody,
     dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform},
     Error,
 };
 use governor::{
 	clock::{Clock, DefaultClock},
-	middleware::{self, StateInformationMiddleware},
-	state, Quota, RateLimiter
+	middleware::{self},
+	state, RateLimiter
 };
-use lazy_static::lazy_static;
 use futures_util::future::{ready, LocalBoxFuture, Ready};
 
 use crate::routes::errors::ApiErrors;
-
-pub fn default_ratelimit() -> RateLimit {
-    RateLimit(Arc::clone(&LIMITER))
-}
-
-lazy_static! {
-    static ref LIMITER: KeyedRateLimiter = Arc::new(
-        RateLimiter::keyed(Quota::per_second(NonZeroU32::new(5).unwrap()))
-            .with_middleware::<StateInformationMiddleware>(),
-    );
-}
 
 pub type KeyedRateLimiter<K = String, MW = middleware::StateInformationMiddleware> =
     Arc<RateLimiter<K, state::keyed::DefaultKeyedStateStore<K>, DefaultClock, MW>>;
@@ -155,7 +142,7 @@ where
             }
         } else {
             let response =
-                ApiErrors::CustomAuthentication("Unable to obtain user IP address!".to_string())
+                ApiErrors::AuthenticationError("Unable to obtain user IP address!".to_string())
                     .error_response();
             Box::pin(async { Ok(req.into_response(response.map_into_right_body())) })
         }

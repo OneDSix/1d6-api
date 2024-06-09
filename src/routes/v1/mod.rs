@@ -1,9 +1,8 @@
-use super::responses::index_get;
-
-use crate::utils::{
-    cors::default_cors,
-    ratelimit::default_ratelimit,
-};
+pub mod game_services;
+pub mod mods;
+pub mod statistics;
+pub mod user;
+pub mod telemetry;
 
 use actix_identity::IdentityMiddleware;
 use actix_session::{config::PersistentSession, storage::CookieSessionStore, SessionMiddleware};
@@ -12,11 +11,7 @@ use actix_web::{
     web::{get, scope, ServiceConfig},
 };
 
-pub mod game_services;
-pub mod mods;
-pub mod statistics;
-pub mod user;
-pub mod telemetry;
+use super::defaults::{default_cors, default_ratelimit, index_get};
 
 pub fn config(cfg: &mut ServiceConfig) {
 

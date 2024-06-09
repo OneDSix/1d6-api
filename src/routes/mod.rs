@@ -1,11 +1,10 @@
-pub mod errors;
-pub mod responses;
 pub mod v1;
+pub mod defaults;
+pub mod errors;
 
 use actix_web::web::{get, scope, ServiceConfig};
-use responses::index_get;
 
-use crate::utils::{cors::default_cors, ratelimit::default_ratelimit};
+use defaults::{index_get, default_ratelimit, default_cors};
 
 pub fn root_config(cfg: &mut ServiceConfig) {
     cfg.service(

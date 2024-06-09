@@ -11,7 +11,6 @@ As such, this is licensed under [AGPL v3.0](LICENSE), the same license as Labrin
 ## For Developers
 
 The full API spec is located in the [wiki](../../wiki/).\
-A webhook service to track events like uptime, uploads, and blog posts is in development.\
 I'll leave the job of making API wrappers, Discord bots, etc. to you.
 
 ## For Contributors
