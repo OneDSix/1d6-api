@@ -8,16 +8,11 @@ A lot of this project is based off [Labrinth](https://github.com/modrinth/labrin
 Full credit to them for a large majority of the code and its layout.\
 As such, this is licensed under [AGPL v3.0](LICENSE), the same license as Labrinth's.
 
-## Telemetry
-
-TODO
-<!-- maybe write about how we will use the data here? -->
-
-
 ## For Developers
 
 The full API spec is located in the [wiki](../../wiki/).\
-I'll leave the job of making API wrappers, Discord bots, etc. to you.
+There are [Javascript](https://github.com/OneDSix/1d6-api/tree/js) and [Kotlin](https://github.com/OneDSix/1d6-api/tree/jvm) wrappers for this api as well, used by the [Website]() and [Core Game](https://github.com/OneDSix/onedsix) respectively.\
+We're leaving the job of Discord bots and wrappers in other languages to you.
 
 ## For Contributors
 
