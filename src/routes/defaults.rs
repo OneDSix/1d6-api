@@ -30,7 +30,7 @@ pub const DOCS_LINK: &'static str = "https://github.com/OneDSix/1d6-api/wiki";
 pub const IMPOSSIBLE_CONDITION: &'static str = "An impossible condition has been reached. Please make an issue with whatever you did to cause this on the API's GitHub here: https://github.com/OneDSix/1d6-api";
 
 lazy_static!{
-	/// A frequently used "Ok!" text.<br>
+	/// A frequently used "Ok!" text used for when something was successful.<br>
 	/// Use `&*SUCCESS` to access it.
 	pub static ref SUCCESS: Value = json!({"success":true});
 

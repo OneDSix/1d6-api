@@ -7,7 +7,6 @@
 use std::collections::HashSet;
 
 use actix_web::{
-    http::header,
     web::{scope, ServiceConfig},
     HttpRequest,
 };

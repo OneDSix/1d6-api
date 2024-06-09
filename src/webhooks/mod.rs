@@ -1,6 +1,5 @@
 pub mod discord;
-//pub mod matrix;
-// Read matrix.rs for more info
+//pub mod matrix; // Read matrix.rs for more info
 
 struct DiscordInfo {
 	pub webhook: String

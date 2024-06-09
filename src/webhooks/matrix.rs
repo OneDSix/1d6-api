@@ -1,6 +1,6 @@
 //! This file was removed from the mod.rs because i couldn't get the matrix sdk to work properly.
 //! If someone wants to take a shot at this, go right ahead.
-//! 
+//!
 //! https://github.com/matrix-org/matrix-rust-sdk/blob/main/examples/getting_started/src/main.rs
 //! https://crates.io/crates/matrix-sdk
 
