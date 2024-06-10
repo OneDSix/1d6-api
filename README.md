@@ -11,7 +11,7 @@ As such, this is licensed under [AGPL v3.0](LICENSE), the same license as Labrin
 ## For Developers
 
 The full API spec is located in the [wiki](../../wiki/).\
-There are [Javascript](https://github.com/OneDSix/1d6-api/tree/js) and [Kotlin](https://github.com/OneDSix/1d6-api/tree/jvm) wrappers for this api as well, used by the [Website]() and [Core Game](https://github.com/OneDSix/onedsix) respectively.\
+There are [Javascript](/js/) and [Kotlin](/jvm/) wrappers for this api as well, used by the Website (TBD) and [Core Game](https://github.com/OneDSix/onedsix) respectively.\
 We're leaving the job of Discord bots and wrappers in other languages to you.
 
 ## For Contributors

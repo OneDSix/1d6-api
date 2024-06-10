@@ -1,0 +1,34 @@
+{
+  "name": "onedsix-sdk",
+  "version": "0.1.0",
+  "description": "The 1D6 API Javascript/Typescript SDK",
+  "author": "1D6 Contributors",
+  "license": "AGPL-3.0",
+  "private": true,
+  "scripts": {
+    "build:web": "webpack --config webpack.web.config.js",
+    "build:node": "webpack --config webpack.node.config.js",
+    "build": "npm run build:web && npm run build:node"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.17.5",
+    "@types/node": "^20.14.2",
+    "@types/node-fetch": "^2.6.11",
+    "@types/webpack": "^5.28.5",
+    "argon2": "^0.40.3",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "lodash": "^4.17.21",
+    "node-fetch": "^3.3.2",
+    "node-polyfill-webpack-plugin": "^4.0.0",
+    "stream-browserify": "^3.0.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.4.5",
+    "webpack-node-externals": "^3.0.0",
+    "whatwg-fetch": "^3.6.20"
+  },
+  "devDependencies": {
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
+  }
+}

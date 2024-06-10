@@ -18,7 +18,7 @@ indent_size = 2
 # Tabs may not be valid YAML/YML
 # @see https://yaml.org/spec/1.2/spec.html#id2777534
 # Slightly easier to read JSONs
-[**.{json,yml,yaml,toml}]
+[**.{json,yml,yaml,toml,*.config.js}]
 indent_style = space
 indent_size = 2
 

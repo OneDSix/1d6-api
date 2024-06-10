@@ -23,7 +23,6 @@ sqlx = "0.7.4"
 meilisearch-sdk = "0.26.1"
 
 reqwest = { version = "0.12.4", features = ["json", "multipart"] }
-#matrix-sdk = "0.7.1"
 
 chrono = { version = "0.4.38", features = ["serde"] }
 rand = "0.8.5"
