@@ -6,26 +6,26 @@ import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-/** Data class for login request */
-data class LoginRequest(
+data class CredentialsRequest(
 	@SerializedName("username") val username: String,
 	@SerializedName("password") val password: String
 )
 
-/** Data class for login response */
 data class LoginResponse(
 	@SerializedName("message") val message: String // Assuming the response has a message
 )
 
-/** Retrofit API interface */
-interface LoginApi {
-	@POST("/api/login")
-	fun login(@Body request: LoginRequest): Call<LoginResponse>
+interface UserApi {
+	@POST("/v1/user/login")
+	fun login(@Body request: CredentialsRequest): Call<LoginResponse>
+
+	@POST("/v1/user/signup")
+	fun signup(@Body request: CredentialsRequest): Call<LoginResponse>
 }
 
 class Authenticator(retrofit: Retrofit) {
 	private val argon2: Argon2 = Argon2Factory.create()
-	private val endpoint: LoginApi = retrofit.create(LoginApi::class.java)
+	private val endpoint: UserApi = retrofit.create(UserApi::class.java)
 
 	fun hashPassword(password: String): String {
 		return argon2.hash(2, 65536, 1, password.toCharArray())
@@ -34,7 +34,7 @@ class Authenticator(retrofit: Retrofit) {
 	/** Given a plain text username+password combo, this will attempt a sign in. */
 	fun login(username: String, password: String): LoginResponse? {
 		val hashedPassword = hashPassword(password)
-		val request = LoginRequest(username, hashedPassword)
+		val request = CredentialsRequest(username, hashedPassword)
 
 		val call = endpoint.login(request)
 		val response = call.execute()

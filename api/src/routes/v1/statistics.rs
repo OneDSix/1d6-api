@@ -1,7 +1,7 @@
 use std::sync::Mutex;
 
 use crate::{
-    routes::{defaults::{default_cors, default_ratelimit}, errors::ApiErrors}, utils::cacher::Cache, AppState
+    routes::{defaults::{default_cors, default_ratelimit}, errors::ApiErrors}, utils::cacher::{Cache, Caching}, AppState
 };
 
 use lazy_static::lazy_static;
@@ -69,7 +69,7 @@ async fn get_stats<'a>(state: Data<AppState>) -> Result<HttpResponse, ApiErrors<
         .await
         .ok()
     {
-        stats.stat_cacher.safe_update(data);
+        stats.stat_cacher.update(data);
     }
 
     Ok(HttpResponse::Ok().json(stats.stat_cacher.cache_data.clone()))
