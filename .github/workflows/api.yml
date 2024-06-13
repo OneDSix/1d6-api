@@ -35,7 +35,7 @@ jobs:
     - name: Install dependencies
       run: |
         cd api
-        cargo install
+        cargo install --path .
 
     - name: Build
       run: cargo build --release
@@ -74,7 +74,7 @@ jobs:
     - name: Install dependencies
       run: |
         cd api
-        cargo install
+        cargo install --path .
 
     - name: Generate and submit dependency graph
       run: |
