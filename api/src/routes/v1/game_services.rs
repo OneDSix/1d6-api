@@ -1,6 +1,6 @@
 use actix_web::web::{get, scope, ServiceConfig};
 
-use crate::routes::{defaults::{default_cors, default_ratelimit, index_get}, errors::ApiErrors};
+use crate::routes::defaults::{default_cors, default_ratelimit, index_get};
 
 pub fn config(cfg: &mut ServiceConfig) {
     cfg.service(

@@ -31,7 +31,7 @@ impl<T> Caching<T> for Cache<T> {
     fn new() -> Self {
         Self {
             cache_data: None,
-            last_updated: Utc::now() - Duration::hours(DEFAULT_MAX_AGE_HOURS + 1), // Ensure it's expired initially
+            last_updated: Utc::now() - Duration::hours(DEFAULT_MAX_AGE_HOURS + 1), // Ensure it's expired initially so the first update always puts in new data.
             max_age: DEFAULT_MAX_AGE_HOURS,
         }
     }

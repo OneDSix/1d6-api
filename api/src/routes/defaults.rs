@@ -37,7 +37,7 @@ lazy_static!{
 	/// A basic 3 request per second ratelimiter.<br>
 	/// Its so restrictive because I don't want shuttle getting on my case if 1D6 get traction.
 	static ref LIMITER: KeyedRateLimiter = Arc::new(
-        RateLimiter::keyed(Quota::per_second(NonZeroU32::new(3).unwrap()))
+        RateLimiter::keyed(Quota::per_minute(NonZeroU32::new(60).unwrap()))
             .with_middleware::<StateInformationMiddleware>(),
     );
 }
@@ -67,4 +67,11 @@ pub async fn index_get() -> HttpResponse {
 
 pub async fn not_found(req: HttpRequest) -> HttpResponse {
 	ApiErrors::NotFound((&req.path()).to_string(), (&req.method()).to_string()).error_response()
+}
+
+pub async fn robots_file(_req: HttpRequest) -> HttpResponse {
+	HttpResponse::Ok().body("
+		User-agent: *\n
+		Disallow: /
+	")
 }

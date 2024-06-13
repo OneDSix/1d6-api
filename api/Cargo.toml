@@ -7,8 +7,16 @@ license = "AGPL-3.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+# Cargo Binaries
+# These will be installed on the system and add "cargo shuttle" and "cargo audit" as commands
+# Comment them out befire running "cargo i" if you dont want them
+cargo-audit = "0.20.0"
+cargo-shuttle = "0.45.0"
+
+# Web Framework
 actix-analytics = "1.1.2"
 actix-cors = "0.7.0"
+actix-files = "0.6.6"
 actix-identity = "0.7.1"
 actix-service = "2.0.2"
 actix-session = { version = "0.9.0", features = ["cookie-session"] }
@@ -16,21 +24,21 @@ actix-web = "4.6.0"
 governor = "0.6.3"
 tokio = "1.38.0"
 
+# Shuttle
 shuttle-actix-web = "0.45.0"
 shuttle-runtime = "0.45.0"
 shuttle-shared-db = { version = "0.45.0", features = ["postgres", "sqlx"] }
 
-sqlx = "0.7.4"
-meilisearch-sdk = "0.26.1"
+# External Programs
+sqlx = "0.7.4" # PostgreSQL
+meilisearch-sdk = "0.26.1" # Meilisearch Engine
 
+# Random Utils
 reqwest = { version = "0.12.4", features = ["json", "multipart"] }
-
 chrono = { version = "0.4.38", features = ["serde"] }
 rand = "0.8.5"
-
 url = "2.5.0"
 urlencoding = "2.1.3"
-
 futures = "0.3.30"
 futures-util = "0.3.30"
 thiserror = "1.0.61"
@@ -38,10 +46,12 @@ lazy_static = "1.4.0"
 itertools = "0.13.0"
 log = "0.4.20"
 
+# JSON Handling
 serde = "1.0.203"
 serde_json = "1.0.117"
 
 # TODO: remove unused auth related dependencies
+# Auth Related
 totp-rs = { version = "5.5.1", features = ["gen_secret"] }
 base64 = "0.22.1"
 argon2 = { version = "0.5.3", features = ["std"] }
@@ -52,7 +62,8 @@ hex = "0.4.3"
 bcrypt = "0.15.1"
 jsonwebtoken = "9.3.0"
 
-validator = { version = "0.16.1", features = ["derive", "phone"] } # Outdated Intentionally!
+# Text Validation
+validator = { version = "0.16.1", features = ["derive", "phone"] } # Outdated Intentionally! Keep on 0.16.1
 regex = "1.10.4"
 censor = "0.3.0"
 spdx = { version = "0.10.6", features = ["text"] }

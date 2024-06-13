@@ -1,17 +1,48 @@
 use actix_web::web::Data;
+use actix_identity::Identity;
 use censor::Censor;
 
 use crate::{routes::errors::ApiErrors, AppState};
 
-const SQL_INJECTION: [&'static str; 28] = [
-	"SELECT", "INSERT", "UPDATE", "DELETE",
-	"DROP", "ALTER", "UNION", "JOIN",
-	"FROM", "WHERE", "HAVING", "OR",
-	"AND", "LIKE", "GROUP", "ORDER",
-	"BY", "EXEC", "EXECUTE", "DECLARE",
-	"TRUNCATE", "RENAME", "CREATE", "TABLE",
-	"INDEX", "VIEW", "PROCEDURE", "FUNCTION",
-];
+struct SqlInjection;
+
+impl SqlInjection {
+	const INJECTION_ARRAY: [&'static str; 28] = [
+		"SELECT", "INSERT", "UPDATE", "DELETE",
+		"DROP", "ALTER", "UNION", "JOIN",
+		"FROM", "WHERE", "HAVING", "OR",
+		"AND", "LIKE", "GROUP", "ORDER",
+		"BY", "EXEC", "EXECUTE", "DECLARE",
+		"TRUNCATE", "RENAME", "CREATE", "TABLE",
+		"INDEX", "VIEW", "PROCEDURE", "FUNCTION",
+	];
+
+	pub fn sql_injection(username: String) -> Result<(), ()> {
+		for &item in Self::INJECTION_ARRAY.iter() {
+			if username.to_uppercase().contains(item) {
+				return Err(())
+			}
+		};
+		Ok(())
+	}
+}
+
+/// A single function enum for checking if the user is signed in, using `actix_identity::Identity`.<br>
+/// Returns the `Identity` if there is a valid `Identity` present, otherwise returns `AuthChecker::NoLI`.<br>
+/// This will be moved to a middleware eventually, maybe with API V2.
+pub enum AuthChecker {
+    NoLI, // NOt Logged In
+    Success(Identity),
+}
+
+impl AuthChecker {
+    pub fn check_auth(identity: Option<Identity>) -> Result<Self, Self> {
+        match identity.map(|id| id) {
+            None => return Err(Self::NoLI),
+            Some(id) => return Ok(Self::Success(id)),
+        }
+    }
+}
 
 pub enum UsernameResult {
 	DatabaseError(String),
@@ -52,11 +83,9 @@ impl UsernameResult {
 			return Err(Self::FowlLanguage)
 		}
 
-		for &item in SQL_INJECTION.iter() {
-			if username.to_uppercase().contains(item) {
-				return Err(Self::SqlInjection)
-			}
-		};
+		if SqlInjection::sql_injection(username).is_err() {
+			return Err(Self::SqlInjection)
+		}
 
 		Ok(Self::Passed)
 	}
@@ -64,7 +93,6 @@ impl UsernameResult {
 
 #[derive(PartialEq)]
 pub enum PasswordResult {
-	SHA1,
 	SHA256,
 	SHA512,
 	Argon2,
@@ -74,11 +102,10 @@ pub enum PasswordResult {
 impl PasswordResult {
 	pub async fn password_check(password: String) -> Result<PasswordResult, PasswordResult> {
 		match &password.len() {
-        	40 if Self::is_valid_hex(&password) && !&password.contains(' ') => Ok(Self::SHA1),
 			64 if Self::is_valid_hex(&password) && !&password.contains(' ') => Ok(Self::SHA256),
 			128 if Self::is_valid_hex(&password) && !&password.contains(' ') => Ok(Self::SHA512),
 			_ => Ok(
-				if password.starts_with("$argon2") && Self::is_valid_base64(password.split('$').nth(5).unwrap()){
+				if password.starts_with("$argon2") {
 					Self::Argon2
 				} else {
 					Self::UnknownHash
@@ -89,9 +116,5 @@ impl PasswordResult {
 
 	fn is_valid_hex(s: &String) -> bool {
 		s.chars().all(|c| c.is_digit(16))
-	}
-
-	fn is_valid_base64(_s: &str) -> bool {
-		todo!()
 	}
 }

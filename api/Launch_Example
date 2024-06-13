@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Example Docker Startup Script
+docker run\
+	--name 1d6-api \
+	--restart on-failure \
+	--env-file ./Secrets.toml \
+	-v /home/[USER]/1d6-api:/data \
+	-p 8080:8080 \
+	-i onedsixapi

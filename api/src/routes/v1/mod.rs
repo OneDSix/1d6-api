@@ -14,7 +14,6 @@ use actix_web::{
 use super::defaults::{default_cors, default_ratelimit, index_get};
 
 pub fn config(cfg: &mut ServiceConfig) {
-
     cfg.service(
         scope("v1")
             // Base Middlewares

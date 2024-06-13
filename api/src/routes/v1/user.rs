@@ -10,7 +10,7 @@ use sqlx::FromRow;
 
 use crate::{
 	routes::{errors::ApiErrors, defaults::{IMPOSSIBLE_CONDITION, SUCCESS, default_cors, default_ratelimit}},
-    utils::username::{PasswordResult, UsernameResult},
+    utils::validation::{PasswordResult, UsernameResult},
     AppState,
 };
 
@@ -60,46 +60,46 @@ async fn post_signup<'a>(
 ) -> Result<HttpResponse, ApiErrors<'a>> {
     #[allow(unused_assignments)]
     let mut returns: Result<HttpResponse, ApiErrors> =
-        Err(ApiErrors::UnknownError("Internal operation not yet started".to_string()).into());
+		Err(ApiErrors::UnknownError("Internal operation not yet started".to_string()).into());
 
-    match PasswordResult::password_check(json.password.clone()).await {
-        Ok(_) => match UsernameResult::username_check(json.username.clone(), &state).await {
-            Err(UsernameResult::DatabaseError(e)) => {
-                returns = Err(ApiErrors::DatabaseError(
-                    "Error while checking username availability: ".to_string() + &e,
-                )
-                .into())
-            }
-            Err(UsernameResult::FowlLanguage) | Err(UsernameResult::SqlInjection) => {
-                returns = Err(ApiErrors::DisallowedUsername(json.username.clone()).into())
-            }
-            Err(UsernameResult::Taken) => {
-                returns = Err(ApiErrors::UnavailableUsername(json.username.clone()).into())
-            }
-            Ok(UsernameResult::Passed) => {
-                let _query = sqlx::query_as(
-                    "
-						INSERT INTO users (username, password)
+	match PasswordResult::password_check(json.password.clone()).await {
+		Ok(_) => match UsernameResult::username_check(json.username.clone(), &state).await {
+			Err(UsernameResult::DatabaseError(e)) => {
+				returns = Err(ApiErrors::DatabaseError(
+					"Error while checking username availability: ".to_string() + &e,
+				)
+				.into())
+			}
+			Err(UsernameResult::FowlLanguage) | Err(UsernameResult::SqlInjection) => {
+				returns = Err(ApiErrors::DisallowedUsername(json.username.clone()).into())
+			}
+			Err(UsernameResult::Taken) => {
+				returns = Err(ApiErrors::UnavailableUsername(json.username.clone()).into())
+			}
+			Ok(UsernameResult::Passed) => {
+				let _query = sqlx::query_as(
+					"
+						INSERT INTO users (username, password, created_at)
 						VALUES (username, password);
 						",
-                )
-                .bind(&json.username)
-                .bind(&json.password)
-                .fetch_one(&state.pool)
-                .await
-                .map_err(|e| ApiErrors::DatabaseError(e.to_string()).into())?;
+				)
+				.bind(&json.username)
+				.bind(&json.password)
+				.fetch_one(&state.pool)
+				.await
+				.map_err(|e| ApiErrors::DatabaseError(e.to_string()).into())?;
 
-                Identity::login(&req.extensions(), json.username.to_string()).unwrap();
-                returns = Ok(HttpResponse::Ok().json(login_json(json.username.clone())))
-            }
-            Ok(_) | Err(_) => {
-                returns = Err(ApiErrors::UnknownError(IMPOSSIBLE_CONDITION.to_string()).into())
-            }
-        },
-        Err(_) => returns = Err(ApiErrors::UnhashedPassword.into()),
-    }
+				Identity::login(&req.extensions(), json.username.to_string()).unwrap();
+				returns = Ok(HttpResponse::Ok().json(login_json(json.username.clone())))
+			}
+			Ok(_) | Err(_) => {
+				returns = Err(ApiErrors::UnknownError(IMPOSSIBLE_CONDITION.to_string()).into())
+			}
+		},
+		Err(_) => returns = Err(ApiErrors::UnhashedPassword.into()),
+	}
 
-    returns
+	returns
 }
 
 #[post("/login")]

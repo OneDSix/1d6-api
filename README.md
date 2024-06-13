@@ -15,4 +15,4 @@ There is a [Kotlin](/sdk/) wrapper for this api as well, used by [1D6](https://g
 
 ## For Contributors
 
-If adding another migration, make sure the file name is `YYYY_MM_DD_Description.sql`, as that makes it a little more organized.
+If adding another migration, make sure the file name is `YYYYMMDD_Description.sql`, as that makes it a little more organized.

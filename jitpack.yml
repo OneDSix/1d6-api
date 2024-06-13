@@ -1,2 +1,8 @@
+version: 1.0
+
+build:
+  scripts:
+    - ./sdk/gradlew -p ./sdk clean build
+
 jdk:
   - openjdk17

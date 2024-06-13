@@ -11,7 +11,7 @@ pub struct ApiError<'a> {
 #[allow(unused)]
 #[derive(Debug, Error)]
 pub enum ApiErrors<'a> {
-	#[error("A dummy error to make sure this enum has a lifetime")]
+	#[error("A dummy error to make sure this enum has a lifetime. This should never be used outside of development environments. {0}")]
 	DummyError(&'a String),
 	#[error("An unknown error occurred: {0}")]
 	UnknownError(String),
@@ -27,7 +27,7 @@ pub enum ApiErrors<'a> {
 	UnavailableUsername(String),
 	#[error("This username is disallowed: {0}")]
 	DisallowedUsername(String),
-	#[error("You sent an unhashed password, bad!")]
+	#[error("You sent an unhashed password, bad! SHA512 or Argon2 is recommended.")]
 	UnhashedPassword,
 	#[error("Error with Authentication Cookie")]
 	AuthenticationCookieError,
@@ -35,10 +35,8 @@ pub enum ApiErrors<'a> {
     RateLimitError(u128, u32),
     #[error("Authentication Error: {0}")]
     AuthenticationError(String),
-	#[error("You are unauthorized to access this content.")]
+	#[error("You are unauthorized to access this content or do this action.")]
 	Unauthorized,
-    #[error("Webhook Error: {0}")]
-    WebhookError(String),
 	#[error("This request came from a region with GDPR or GDPR-Adjacent legislation. We're not taking an risks with telemetry in the EU, sorry! :(")]
 	GDPRRegion
 }
@@ -60,7 +58,6 @@ impl ApiErrors<'_> {
 				Self::RateLimitError(..) => "rate_limited",
                 Self::AuthenticationError(..) => "custom_auth",
 				Self::Unauthorized => "unauthorized",
-				Self::WebhookError(..) => "webhook_error",
 				Self::GDPRRegion => "gdpr_region",
             },
             description: self.to_string(),
@@ -88,7 +85,6 @@ impl<'a> actix_web::ResponseError for ApiErrors<'_> {
 			Self::RateLimitError(..) => StatusCode::TOO_MANY_REQUESTS,
             Self::AuthenticationError(..) => StatusCode::UNAUTHORIZED,
 			Self::Unauthorized => StatusCode::UNAUTHORIZED,
-			Self::WebhookError(..) => StatusCode::BAD_REQUEST,
 			Self::GDPRRegion => StatusCode::UNAVAILABLE_FOR_LEGAL_REASONS,
         }
     }

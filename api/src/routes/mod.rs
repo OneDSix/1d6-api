@@ -1,6 +1,7 @@
-pub mod v1;
+pub mod assets;
 pub mod defaults;
 pub mod errors;
+pub mod v1;
 
 use actix_web::web::{get, scope, Data, ServiceConfig};
 use actix_analytics::Analytics;
@@ -21,6 +22,7 @@ pub fn root_config(cfg: &mut ServiceConfig, state: &Data<AppState>) {
             // All empty addresses end with a "/", so only handle "example.com/"
             .route("/", get().to(index_get))
 			// Everthing Else
+			.configure(assets::config)
 			.configure(v1::config)
     );
 }

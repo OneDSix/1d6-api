@@ -8,10 +8,10 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: labrinth
-      POSTGRES_PASSWORD: labrinth
-      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: Redacted
+      POSTGRES_USER: Redacted
+      POSTGRES_PASSWORD: Redacted
+      POSTGRES_HOST_AUTH_METHOD: Redacted
   meilisearch:
     image: getmeili/meilisearch:v1.5.0
     restart: on-failure
@@ -20,5 +20,5 @@ services:
     volumes:
       - meilisearch-data:/data.ms
     environment:
-      MEILI_MASTER_KEY: modrinth
+      MEILI_MASTER_KEY: Redacted
       MEILI_HTTP_PAYLOAD_SIZE_LIMIT: 107374182400

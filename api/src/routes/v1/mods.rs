@@ -1,5 +1,5 @@
 use crate::{
-	routes::{errors::ApiErrors, defaults::{default_cors, default_ratelimit}}, utils::auth::AuthChecker, AppState
+	routes::{errors::ApiErrors, defaults::{default_cors, default_ratelimit}}, utils::validation::AuthChecker, AppState
 };
 
 use actix_identity::Identity;
@@ -30,6 +30,8 @@ pub struct Mod {
 	pub maven: String,
 	pub git_based: bool,
 	pub jitpack: bool,
+	pub license: String,
+	pub foss: bool,
 }
 
 pub fn config(cfg: &mut ServiceConfig) {
@@ -47,7 +49,7 @@ pub fn config(cfg: &mut ServiceConfig) {
 async fn post_mod<'a>(identity: Option<Identity>, new_mod: Json<NewMod>, state: Data<AppState>) -> Result<Json<Mod>, ApiErrors<'a>> {
 	match AuthChecker::check_auth(identity) {
 		Ok(_) => {
-			let todo = sqlx::query_as(
+			let return_mod: Mod = sqlx::query_as(
 				"
 				INSERT INTO mods(name, icon, description, download, owner)
 				VALUES (name, icon, description, download, owner)
@@ -59,7 +61,7 @@ async fn post_mod<'a>(identity: Option<Identity>, new_mod: Json<NewMod>, state: 
 			.await
 			.map_err(|e| ApiErrors::DatabaseError(e.to_string()).into())?;
 
-			Ok(Json(todo))
+			Ok(Json(return_mod))
 		},
 		Err(_) => {
 			Err(ApiErrors::Unauthorized)
@@ -69,7 +71,7 @@ async fn post_mod<'a>(identity: Option<Identity>, new_mod: Json<NewMod>, state: 
 
 #[get("/{id}")]
 async fn get_mod<'a>(path: Path<i32>, state: Data<AppState>) -> Result<Json<Mod>, ApiErrors<'a>> {
-    let todo = sqlx::query_as("SELECT * FROM mods WHERE id = $1")
+    let todo: Mod = sqlx::query_as("SELECT * FROM mods WHERE id = $1")
         .bind(*path)
         .fetch_one(&state.pool)
         .await

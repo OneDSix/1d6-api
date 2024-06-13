@@ -26,6 +26,7 @@ Cargo.lock
 
 # production
 **/dist
+**/build/
 
 # misc
 .DS_Store
@@ -42,3 +43,4 @@ yarn-error.log*
 **/.idea
 **/.gradle
 Secrets*.toml
+audit.json
