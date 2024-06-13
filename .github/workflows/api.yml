@@ -33,7 +33,9 @@ jobs:
           ${{ runner.os }}-cargo-index
 
     - name: Install dependencies
-      run: cargo install
+      run: |
+        cd api
+        cargo install
 
     - name: Build
       run: cargo build --release
@@ -70,7 +72,9 @@ jobs:
           ${{ runner.os }}-cargo-index
 
     - name: Install dependencies
-      run: cargo install
+      run: |
+        cd api
+        cargo install
 
     - name: Generate and submit dependency graph
       run: |
