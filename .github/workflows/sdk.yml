@@ -1,4 +1,4 @@
-name: Java CI Build and Dist
+name: SDK Build and Dependecy Graph
 
 on: [push, pull_request]
 
