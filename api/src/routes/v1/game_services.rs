@@ -1,14 +1,19 @@
-use actix_web::web::{get, scope, ServiceConfig};
+use actix_web::{get, Result, web::{Data, scope, ServiceConfig}, HttpResponse};
 
-use crate::routes::defaults::{default_cors, default_ratelimit, index_get};
+use crate::{
+	routes::{errors::ApiErrors, defaults::{default_cors, default_ratelimit}}, AppState
+};
 
 pub fn config(cfg: &mut ServiceConfig) {
     cfg.service(
         scope("gs")
             .wrap(default_cors())
             .wrap(default_ratelimit())
-            // Handle both "/v1" and "/v1/" as they can be easily mixed up
-            .route("", get().to(index_get))
-            .route("/", get().to(index_get)),
+            .service(get_root)
     );
+}
+
+#[get("/")]
+async fn get_root<'a>(_state: Data<AppState>) -> Result<HttpResponse, ApiErrors<'a>> {
+    Ok(HttpResponse::Ok().finish())
 }

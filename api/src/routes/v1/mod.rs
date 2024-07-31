@@ -35,10 +35,10 @@ pub fn config(cfg: &mut ServiceConfig) {
             .route("/", get().to(index_get))
 
             // Add the rest of the endpoints
-            .configure(user::config)
+            .configure(game_services::config)
             .configure(mods::config)
             .configure(statistics::config)
-            .configure(game_services::config)
 			.configure(telemetry::config)
+            .configure(user::config)
     );
 }

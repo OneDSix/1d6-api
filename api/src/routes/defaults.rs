@@ -24,18 +24,21 @@ pub fn default_ratelimit() -> RateLimit {
 }
 
 /// A constant link to the API docs. Added to the end of some requests.
-pub const DOCS_LINK: &'static str = "https://github.com/OneDSix/1d6-api/wiki";
+pub const DOCS_LINK: &str = "https://github.com/OneDSix/1d6-api/wiki";
+
+/// A constant link to the issues page. Added to the end of errors.
+pub const ISSUES_LINK: &str = "https://github.com/OneDSix/1d6-api/issues";
 
 /// Send this whenever an impossible condition is possible.
-pub const IMPOSSIBLE_CONDITION: &'static str = "An impossible condition has been reached. Please make an issue with whatever you did to cause this on the API's GitHub here: https://github.com/OneDSix/1d6-api";
+/// Like the "catch-all" segments of match statements, or an if branch that is impossible to reach.
+pub const IMPOSSIBLE_CONDITION: &str = "An impossible condition has been reached. Please make a report with whatever you did to cause this error here: https://github.com/OneDSix/1d6-api/issues";
 
 lazy_static!{
 	/// A frequently used "Ok!" text used for when something was successful.<br>
 	/// Use `&*SUCCESS` to access it.
 	pub static ref SUCCESS: Value = json!({"success":true});
 
-	/// A basic 3 request per second ratelimiter.<br>
-	/// Its so restrictive because I don't want shuttle getting on my case if 1D6 get traction.
+	/// A basic 60 requests/minute ratelimiter.
 	static ref LIMITER: KeyedRateLimiter = Arc::new(
         RateLimiter::keyed(Quota::per_minute(NonZeroU32::new(60).unwrap()))
             .with_middleware::<StateInformationMiddleware>(),

@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS activity (
 	uptime FLOAT NOT NULL,
 	player_count INTEGER NOT NULL,
 	mod_count INTEGER NOT NULL
-)
+);
 
 -- Change the ID of users to the Username instead
 ALTER TABLE users
@@ -67,4 +67,4 @@ ADD PRIMARY KEY (username);
 
 -- Add a Creation Date param
 ALTER TABLE users
-ADD COLUMN creation_datetime timestamptz default CURRENT_TIMESTAMP NOT NULL
+ADD COLUMN creation_datetime timestamptz default CURRENT_TIMESTAMP NOT NULL;

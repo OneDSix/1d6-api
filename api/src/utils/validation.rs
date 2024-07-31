@@ -27,19 +27,43 @@ impl SqlInjection {
 	}
 }
 
-/// A single function enum for checking if the user is signed in, using `actix_identity::Identity`.<br>
+/// An enum for checking if the user is signed in, using `actix_identity::Identity`.<br>
 /// Returns the `Identity` if there is a valid `Identity` present, otherwise returns `AuthChecker::NoLI`.<br>
 /// This will be moved to a middleware eventually, maybe with API V2.
 pub enum AuthChecker {
     NoLI, // NOt Logged In
     Success(Identity),
+	Unauthorized
 }
 
 impl AuthChecker {
-    pub fn check_auth(identity: Option<Identity>) -> Result<Self, Self> {
+    pub fn check_exists(identity: Option<Identity>) -> Result<Self, Self> {
         match identity.map(|id| id) {
             None => return Err(Self::NoLI),
             Some(id) => return Ok(Self::Success(id)),
+        }
+    }
+
+	pub fn check_against(identity: Option<Identity>, target: &String) -> Result<Self, Self> {
+		match identity {
+            None => Err(Self::NoLI),
+            Some(id) => match id.id() {
+				Ok(current) => {
+					if current == *target {
+						Ok(Self::Success(id))
+					} else {
+						Err(Self::Unauthorized)}
+					},
+				_ => Err(Self::NoLI),
+			},
+        }
+	}
+
+	pub fn get_identity(self) -> Option<Identity> {
+        match self {
+            Self::Success(identity) => Some(identity),
+            Self::NoLI => None,
+			Self::Unauthorized => None,
         }
     }
 }

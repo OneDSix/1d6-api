@@ -37,6 +37,8 @@ pub enum ApiErrors<'a> {
     AuthenticationError(String),
 	#[error("You are unauthorized to access this content or do this action.")]
 	Unauthorized,
+	#[error("You are not logged in!")]
+	NotLoggedIn,
 	#[error("This request came from a region with GDPR or GDPR-Adjacent legislation. We're not taking an risks with telemetry in the EU, sorry! :(")]
 	GDPRRegion
 }
@@ -58,6 +60,7 @@ impl ApiErrors<'_> {
 				Self::RateLimitError(..) => "rate_limited",
                 Self::AuthenticationError(..) => "custom_auth",
 				Self::Unauthorized => "unauthorized",
+				Self::NotLoggedIn => "noli",
 				Self::GDPRRegion => "gdpr_region",
             },
             description: self.to_string(),
@@ -85,6 +88,7 @@ impl<'a> actix_web::ResponseError for ApiErrors<'_> {
 			Self::RateLimitError(..) => StatusCode::TOO_MANY_REQUESTS,
             Self::AuthenticationError(..) => StatusCode::UNAUTHORIZED,
 			Self::Unauthorized => StatusCode::UNAUTHORIZED,
+			Self::NotLoggedIn => StatusCode::UNAUTHORIZED,
 			Self::GDPRRegion => StatusCode::UNAVAILABLE_FOR_LEGAL_REASONS,
         }
     }

@@ -1,1 +1,1 @@
-include("sdk")
+include("jsdk")

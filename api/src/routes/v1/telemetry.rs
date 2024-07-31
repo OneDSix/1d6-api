@@ -91,7 +91,7 @@ mod activity {
 }
 
 /// It should be noted that this covers both the website and official launcher,
-/// as the launcher just loads the website and asks for access to certain pages of the site.
+/// as the launcher just loads and asks for access to certain pages of the website.
 /// This just records what device and browser you use, and the React Web Vitals specs, then saves them for later.
 /// Its literally just to see if React is being slow and buggy, and if it is, where and on what.
 mod website {

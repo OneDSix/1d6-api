@@ -5,7 +5,6 @@
     "editorconfig.editorconfig",
 
     // Rust
-    "serayuzgur.crates",
     "tamasfe.even-better-toml",
     "1yib.rust-bundle",
     "dustypomerleau.rust-syntax",
