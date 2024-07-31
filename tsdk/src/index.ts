@@ -10,7 +10,7 @@ export interface RequestOptions extends AxiosRequestConfig { }
 export default class ApiSdk {
 	private homeServer: string
 	private jar: CookieJar
-	public authenticated: boolean
+	public authenticated: boolean = false
 
 	public AUTH: Authenticator
 

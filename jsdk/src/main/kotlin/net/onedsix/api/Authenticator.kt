@@ -1,3 +1,5 @@
+package net.onedsix.api
+
 import com.google.gson.annotations.SerializedName
 import de.mkammerer.argon2.Argon2
 import de.mkammerer.argon2.Argon2Factory
@@ -5,23 +7,6 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.POST
-
-data class CredentialsRequest(
-	@SerializedName("username") val username: String,
-	@SerializedName("password") val password: String
-)
-
-data class LoginResponse(
-	@SerializedName("message") val message: String // Assuming the response has a message
-)
-
-interface UserApi {
-	@POST("/v1/user/login")
-	fun login(@Body request: CredentialsRequest): Call<LoginResponse>
-
-	@POST("/v1/user/signup")
-	fun signup(@Body request: CredentialsRequest): Call<LoginResponse>
-}
 
 class Authenticator(retrofit: Retrofit) {
 	private val argon2: Argon2 = Argon2Factory.create()
@@ -43,5 +28,22 @@ class Authenticator(retrofit: Retrofit) {
 		} else {
 			null
 		}
+	}
+
+	data class CredentialsRequest(
+		@SerializedName("username") val username: String,
+		@SerializedName("password") val password: String
+	)
+
+	data class LoginResponse(
+		@SerializedName("message") val message: String
+	)
+
+	interface UserApi {
+		@POST("/v1/user/login")
+		fun login(@Body request: CredentialsRequest): Call<LoginResponse>
+
+		@POST("/v1/user/signup")
+		fun signup(@Body request: CredentialsRequest): Call<LoginResponse>
 	}
 }
